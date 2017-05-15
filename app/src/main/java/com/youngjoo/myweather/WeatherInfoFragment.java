@@ -3,8 +3,10 @@ package com.youngjoo.myweather;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
-import java.io.IOException;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
  * Created by samsung on 2017. 5. 10..
@@ -12,6 +14,8 @@ import java.io.IOException;
 
 public class WeatherInfoFragment extends Fragment {
     private static final String TAG="WeatherInfoFragment";
+
+    private TextView mJsonTextView;
 
     public static WeatherInfoFragment newInstance(){
         return new WeatherInfoFragment();
@@ -22,6 +26,14 @@ public class WeatherInfoFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         new FetchInfoTask().execute();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        View v = inflater.inflate(R.layout.fragment_weather_info, container, false);
+        mJsonTextView = (TextView)v.findViewById(R.id.json_text_view);
+
+        return v;
     }
 
 
