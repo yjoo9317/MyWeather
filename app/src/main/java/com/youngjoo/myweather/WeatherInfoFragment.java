@@ -40,7 +40,8 @@ public class WeatherInfoFragment extends Fragment {
     private class FetchInfoTask extends AsyncTask<Void, Void, Void>{
         @Override
         protected Void doInBackground(Void...params){
-            new WeatherFetcher().fetch();
+            new WeatherFetcher().fetchFromAirKorea();
+            //new WeatherFetcher().fetch();
             return null;
         }
     }
