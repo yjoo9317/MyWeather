@@ -6,6 +6,7 @@ package com.youngjoo.myweather;
 
 public class WeatherInfo {
 
+    private static final int COUNT = 9;
     private float mHighTemp;
     private float mLowTemp;
     private int mPM10Value;
@@ -86,5 +87,9 @@ public class WeatherInfo {
 
     public void setStationName(String stationName) {
         mStationName = stationName;
+    }
+
+    public int getCount(){
+        return COUNT;
     }
 }
