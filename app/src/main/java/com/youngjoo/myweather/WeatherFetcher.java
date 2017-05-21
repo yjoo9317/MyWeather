@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
+import java.util.List;
 
 /**
  * Created by samsung on 2017. 5. 10..
@@ -29,9 +29,13 @@ public class WeatherFetcher {
     private static final String TAG="WeatherFetcher";
     private static final String LAT="37.274292";
     private static final String LON="127.076833";
+    private WeatherInfo mWeatherInfo;
 
 
     public void fetch(){
+        if(mWeatherInfo == null){
+            mWeatherInfo = new WeatherInfo();
+        }
         try{
             String url = Uri.parse(WEATHER_URI).buildUpon()
                     .appendQueryParameter("version", "1")
@@ -47,8 +51,10 @@ public class WeatherFetcher {
         }
     }
 
-    public WeatherInfo fetchFromAirKorea(){
-        WeatherInfo info = new WeatherInfo();
+    public List<WeatherInfoItem> fetchFromAirKorea(){
+        if(mWeatherInfo == null) {
+            mWeatherInfo = new WeatherInfo();
+        }
         try{
             //String station = URLEncoder.encode("광교동", "euc-kr");
 
@@ -63,18 +69,18 @@ public class WeatherFetcher {
                     .build().toString();
             String decoded = URLDecoder.decode(url, "utf-8");
             Log.i(TAG, "Decoded URL: "+ decoded);
-            Log.i(TAG, "URL:"+url);
+            //Log.i(TAG, "URL:"+url);
             String jsonResult = getResString(decoded);
             Log.i(TAG, "Received JSON from air korea: "+jsonResult);
             JSONObject jsonObject = new JSONObject(jsonResult);
-            parseResult(info, jsonObject);
+            parseResult(mWeatherInfo, jsonObject);
         } catch(JSONException je){
             Log.e(TAG, "Failed to parse JSON");
         }
         catch(IOException ioe){
             Log.e(TAG, "Failed to fetch from air korea: "+ioe);
         }
-        return info;
+        return mWeatherInfo.getItemList();
     }
 
     private void parseResult(WeatherInfo info, JSONObject jsonObject)
@@ -91,6 +97,7 @@ public class WeatherFetcher {
             Log.i(TAG, "PM10: "+ info.getPM10Value());
             Log.i(TAG, "PM25: "+ info.getPM25Value());
         }
+        info.createInfoList();
     }
 
 

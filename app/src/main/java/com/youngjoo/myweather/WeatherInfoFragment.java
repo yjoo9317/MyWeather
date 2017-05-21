@@ -5,10 +5,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by samsung on 2017. 5. 10..
@@ -18,6 +22,7 @@ public class WeatherInfoFragment extends Fragment {
     private static final String TAG="WeatherInfoFragment";
 
     private RecyclerView mWeatherRecyclerView;
+    private List<WeatherInfoItem> mWeatherInfoItems = new ArrayList<>();
     //private TextView mJsonTextView;
 
     public static WeatherInfoFragment newInstance(){
@@ -42,6 +47,14 @@ public class WeatherInfoFragment extends Fragment {
         return v;
     }
 
+    private void setAdapter(){
+        if(isAdded()) {
+            mWeatherRecyclerView.setAdapter(new WeatherAdapter(mWeatherInfoItems));
+        } else{
+            Log.e(TAG, "Fragment hasn't been attached yet..");
+        }
+    }
+
     private class WeatherHolder extends RecyclerView.ViewHolder{
 
         public TextView mTitleTextView, mValueTextView;
@@ -51,14 +64,20 @@ public class WeatherInfoFragment extends Fragment {
             mTitleTextView = (TextView)view.findViewById(R.id.item_title_text);
             mValueTextView = (TextView)view.findViewById(R.id.item_value_text);
         }
+
+        public void bindWeatherInfoItem(WeatherInfoItem item){
+            mTitleTextView.setText(item.getTitle());
+            mValueTextView.setText(item.getValue());
+        }
     }
 
     private class WeatherAdapter extends RecyclerView.Adapter<WeatherHolder> {
 
-        private WeatherInfo mWeatherInfo;
+        //private WeatherInfo mWeatherInfo;
+        private List<WeatherInfoItem> mWeatherInfoList;
 
-        public WeatherAdapter(WeatherInfo info){
-            mWeatherInfo = info;
+        public WeatherAdapter(List<WeatherInfoItem> items){
+            mWeatherInfoList = items;
         }
 
         @Override
@@ -70,21 +89,28 @@ public class WeatherInfoFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(WeatherHolder holder, int position){
-
+            WeatherInfoItem item = mWeatherInfoList.get(position);
+            holder.bindWeatherInfoItem(item);
         }
 
         @Override
         public int getItemCount(){
-            return mWeatherInfo.getCount();
+            return mWeatherInfoList.size();
         }
     }
 
-    private class FetchInfoTask extends AsyncTask<Void, Void, Void>{
+    private class FetchInfoTask extends AsyncTask<Void, Void, List<WeatherInfoItem>>{
         @Override
-        protected Void doInBackground(Void...params){
-            new WeatherFetcher().fetchFromAirKorea();
+        protected List<WeatherInfoItem> doInBackground(Void...params){
+            return new WeatherFetcher().fetchFromAirKorea();
             //new WeatherFetcher().fetch();
-            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(List<WeatherInfoItem> list){
+            mWeatherInfoItems = list;
+            setAdapter();
         }
     }
 
