@@ -47,8 +47,9 @@ public class WeatherFetcher {
         }
     }
 
-    public WeatherInfo fetchFromAirKorea(){
-        WeatherInfo info = new WeatherInfo();
+    public WeatherInfo fetchFromAirKorea(WeatherInfo info){
+        if(info == null)
+            info = new WeatherInfo();
         try{
             //String station = URLEncoder.encode("광교동", "euc-kr");
 
@@ -68,6 +69,8 @@ public class WeatherFetcher {
             Log.i(TAG, "Received JSON from air korea: "+jsonResult);
             JSONObject jsonObject = new JSONObject(jsonResult);
             parseResult(info, jsonObject);
+            info.createInfoList();
+
         } catch(JSONException je){
             Log.e(TAG, "Failed to parse JSON");
         }

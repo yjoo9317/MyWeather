@@ -5,10 +5,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.util.List;
 
 /**
  * Created by samsung on 2017. 5. 10..
@@ -18,6 +21,10 @@ public class WeatherInfoFragment extends Fragment {
     private static final String TAG="WeatherInfoFragment";
 
     private RecyclerView mWeatherRecyclerView;
+    private WeatherInfo mWeatherInfo;
+
+    private WeatherAdapter mAdapter;
+
     //private TextView mJsonTextView;
 
     public static WeatherInfoFragment newInstance(){
@@ -39,7 +46,16 @@ public class WeatherInfoFragment extends Fragment {
         mWeatherRecyclerView = (RecyclerView) v.findViewById(R.id.weather_recycler_view);
         mWeatherRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        //updateInfo();
+
         return v;
+    }
+
+    private void updateInfo(){
+        List<WeatherInfoItem> list = mWeatherInfo.getWeatherInfoItems();
+        Log.i(TAG, "PM25: "+list.get(4).getValue());
+        mAdapter = new WeatherAdapter(list);
+        mWeatherRecyclerView.setAdapter(mAdapter);
     }
 
     private class WeatherHolder extends RecyclerView.ViewHolder{
@@ -55,10 +71,10 @@ public class WeatherInfoFragment extends Fragment {
 
     private class WeatherAdapter extends RecyclerView.Adapter<WeatherHolder> {
 
-        private WeatherInfo mWeatherInfo;
+        private List<WeatherInfoItem> mWeatherInfoItems;
 
-        public WeatherAdapter(WeatherInfo info){
-            mWeatherInfo = info;
+        public WeatherAdapter(List<WeatherInfoItem> infos){
+            mWeatherInfoItems = infos;
         }
 
         @Override
@@ -70,21 +86,30 @@ public class WeatherInfoFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(WeatherHolder holder, int position){
-
+            holder.mTitleTextView.setText(mWeatherInfoItems.get(position).getTitle());
+            holder.mValueTextView.setText(mWeatherInfoItems.get(position).getValue());
         }
 
         @Override
         public int getItemCount(){
-            return mWeatherInfo.getCount();
+            return mWeatherInfoItems.size();
         }
     }
 
-    private class FetchInfoTask extends AsyncTask<Void, Void, Void>{
+    private class FetchInfoTask extends AsyncTask<Void, Void, WeatherInfo>{
         @Override
-        protected Void doInBackground(Void...params){
-            new WeatherFetcher().fetchFromAirKorea();
+        protected WeatherInfo doInBackground(Void...params){
+            if(mWeatherInfo == null)
+                mWeatherInfo = new WeatherInfo();
+            new WeatherFetcher().fetchFromAirKorea(mWeatherInfo);
             //new WeatherFetcher().fetch();
-            return null;
+            return mWeatherInfo;
+        }
+
+        @Override
+        protected  void onPostExecute(WeatherInfo info){
+            mWeatherInfo = info;
+            updateInfo();
         }
     }
 
