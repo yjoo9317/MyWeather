@@ -1,19 +1,12 @@
 package com.youngjoo.myweather;
 
 /**
- * Created by yjoo9_000 on 2017-05-21.
+ * Created by samsung on 2017. 5. 19..
  */
 
 public class WeatherInfoItem {
-
     private String mTitle;
     private String mValue;
-
-    public WeatherInfoItem(String title, String value){
-        mTitle = title;
-        mValue = value;
-    }
-
 
     public String getTitle() {
         return mTitle;
@@ -22,4 +15,11 @@ public class WeatherInfoItem {
     public String getValue() {
         return mValue;
     }
+
+    public WeatherInfoItem(String title, String value){
+        mTitle = title;
+        mValue = value;
+    }
+
+
 }

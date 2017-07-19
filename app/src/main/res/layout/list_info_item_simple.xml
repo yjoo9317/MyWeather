@@ -4,7 +4,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
     <TextView
-        android:id="@+id/item_title_text"
+        android:id="@+id/item_title_text_simple"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
@@ -12,7 +12,7 @@
         android:layout_alignParentLeft="true"
         tools:text="weather item"/>
     <TextView
-        android:id="@+id/item_value_text"
+        android:id="@+id/item_value_text_simple"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
