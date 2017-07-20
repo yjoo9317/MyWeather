@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GridLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:columnCount="2"
@@ -9,12 +10,22 @@
     android:id="@+id/list_info_item">
     <TextView
         android:id="@+id/item_title_text"
-        android:textSize="10dp"
-        android:text="title"
-        android:layout_gravity="center"/>
+        android:textStyle="bold"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        tools:text="weather title"
+        android:padding="4dp"
+        android:gravity="start"
+        android:textAlignment="gravity"
+        />
     <TextView
         android:id="@+id/item_value_text"
-        android:textSize="10dp"
-        android:text="value"/>
+        android:textStyle="bold"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:padding="4dp"
+        android:layout_gravity="right"
+
+        tools:text="value"/>
 
 </GridLayout>
